@@ -1,7 +1,9 @@
 module lang::fsm::WFR
 
+import IO; 
+import List; 
 import lang::fsm::AST; 
-import IO;
+
 
 data Error = moreThanOneStartState()
            | noFinalState()
@@ -29,13 +31,21 @@ private list[Error] wfrMoreThanOneStartState(list[State] states, int accumulator
 	return []; 	
 }
 
-private int countNumberOfStartStates(list[State] states) {
-	switch (states) {
-		case [startState(), *L] : { return 1 +  countNumberOfStartStates(L); }
-		case [_, *L] :  return wfrMoreThanOneStartState(L); 
-		case [] : return 0;
-	};	
-}
+private int countNumberOfStartStates(list[State] states) = size([startState() | /startState() <- states]);
+
+//
+// another option using a visitor (visit construct)
+//
+ 
+//private int countNumberOfStartStates(list[State] states) {
+//	total = 0; 
+//	
+//	visit(states) {
+//		case startState(): total = total + 1; 
+//	}
+//	
+//	return total; 
+//}
 
 test bool noStartStateTest() {
 	s1 = state("pending"); 
