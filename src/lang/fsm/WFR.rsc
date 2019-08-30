@@ -17,13 +17,18 @@ data Error = moreThanOneStartState()
  
 public list[Error] wfr(StateMachine m) = wfrNoStartState(m.states); 
 
-private list[Error] wfrNoStartState(list[State] states) { 
-	switch (states) {
-		case [] : return [noStartState()]; 
-		case [startState(), _] : return [];
-		case [_, *L] : return wfrNoStartState(L);  
-	};
-} 
+private list[Error] wfrNoStartState([]) = [noStartState()];
+private list[Error] wfrNoStartState([startState(), _]) = [];
+private list[Error] wfrNoStartState([_, *L]) = wfrNoStartState(L); 
+
+//
+//private list[Error] wfrNoStartState(list[State] states) { 
+//	switch (states) {
+//		case [] : return [noStartState()]; 
+//		case [startState(), _] : return [];
+//		case [_, *L] : return wfrNoStartState(L);  
+//	};
+//} 
 
 private list[Error] wfrMoreThanOneStartState(list[State] states, int accumulator = 0) { 
 	total = countNumberOfStartStates(states);
